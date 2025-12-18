@@ -3,9 +3,9 @@
 This manifest summarizes the entire integrated system for high-fidelity technical publishing.
 
 ## 🏛️ System Core
-- **`agents_orchestrator.py`**: The Central Engine. Manages agent coordination, context stitching, and build triggers.
-- **`paper_curator.py`**: The Research Acquisition Module. Handles autonomous arXiv API search and curation.
-- **`master_prompt_template.md`**: The Cognitive Architecture. Contains the **Grand Curation Prompt V2** and global "Constitutional" rules.
+- **`engine.py`**: The Central Engine. Manages agent coordination, context stitching, and build triggers.
+- **`fetcher.py`**: The Research Acquisition Module. Handles autonomous arXiv API search and curation.
+- **`protocols.md`**: The Cognitive Architecture. Contains the **Grand Curation Prompt V2** and global rules.
 
 ## 🧠 Cognitive Agents (`prompts/`)
 - **`architect.md`**: Structural synthesis and blueprint design.
@@ -27,5 +27,5 @@ This manifest summarizes the entire integrated system for high-fidelity technica
 ---
 
 **Status**: HARDENED & PRODUCTION READY.
-**Theme**: Grand Curation / Technical Scientific Standard.
+**Theme**: Technical / Scientific Standard.
 **Capabilities**: Autonomous Search-to-PDF Pipeline.
