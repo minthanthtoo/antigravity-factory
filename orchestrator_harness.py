@@ -1,5 +1,5 @@
 try:
-    from fetcher import ResearchEngine
+    from research_engine import ResearchEngine
 except ImportError:
     ResearchEngine = None
 
@@ -27,9 +27,9 @@ class Orchestrator:
         self.prompts = self._load_prompts()
         self.counter = TokenCounter(budget=user_config.get("TOKEN_BUDGET", 5000000))
         
-        # Protocols Integration
+        # Grand Curation Protocol Integration
         self.master_ref = ""
-        v2_path = os.path.join(os.path.dirname(__file__), "protocols.md")
+        v2_path = os.path.join(os.path.dirname(__file__), "grand_curation_prompt_v2.md")
         if os.path.exists(v2_path):
             with open(v2_path, 'r', encoding='utf-8') as f:
                 self.master_ref = f.read()
@@ -200,7 +200,7 @@ class Orchestrator:
             if not os.path.exists("refs.bib"):
                 with open("refs.bib", 'w') as f: f.write("@misc{placeholder, title={Placeholder}}")
 
-            script = os.path.join(os.path.dirname(__file__), "typeset.sh")
+            script = os.path.join(os.path.dirname(__file__), "build_book.sh")
             if os.path.exists(script):
                 subprocess.run(["bash", script])
                 logging.info("📚 PDF/HTML Generation finished.")

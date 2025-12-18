@@ -3,9 +3,9 @@
 This manifest summarizes the entire integrated system for high-fidelity technical publishing.
 
 ## 🏛️ System Core
-- **`engine.py`**: The Central Engine. Manages agent coordination, context stitching, and build triggers.
-- **`fetcher.py`**: The Research Acquisition Module. Handles autonomous arXiv API search and curation.
-- **`protocols.md`**: The Cognitive Architecture. Contains the **Grand Curation Prompt V2** and global rules.
+- **`orchestrator_harness.py`**: The Central Engine. Manages agent coordination, context stitching, and build triggers.
+- **`research_engine.py`**: The Research Acquisition Module. Handles autonomous arXiv API search and curation.
+- **`grand_curation_prompt_v2.md`**: The Cognitive Architecture. Contains the **Grand Curation Prompt V2** and global rules.
 
 ## 🧠 Cognitive Agents (`prompts/`)
 - **`architect.md`**: Structural synthesis and blueprint design.
@@ -14,7 +14,7 @@ This manifest summarizes the entire integrated system for high-fidelity technica
 - **`summarizer.md`**: Context preservation and compression.
 
 ## 🛠️ Infrastructure
-- **`typeset.sh`**: Automated LaTeX/XeTeX build pipeline via Pandoc and Tectonic.
+- **`build_book.sh`**: Automated LaTeX/XeTeX build pipeline via Pandoc and Tectonic.
 - **`book_metadata.yaml`**: Typesetting parameters (Geometry, Fonts, TOC).
 - **`requirements.txt`**: Environment dependencies.
 - **`.gitignore`**: Protection against accidental leaks.
@@ -27,5 +27,5 @@ This manifest summarizes the entire integrated system for high-fidelity technica
 ---
 
 **Status**: HARDENED & PRODUCTION READY.
-**Theme**: Technical / Scientific Standard.
+**Theme**: Original "Grand Curation" Standard.
 **Capabilities**: Autonomous Search-to-PDF Pipeline.
