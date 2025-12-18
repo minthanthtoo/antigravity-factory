@@ -1,0 +1,18 @@
+# Build Artifacts
+book_out/
+The_Physics_of_Agentic_AI.pdf
+The_Physics_of_Agentic_AI.html
+the_physics_of_agentic_ai_full.md
+full_book.md
+refs.bib
+
+# Research Input (User specific)
+papers/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# System
+.DS_Store
+*.log

@@ -1,0 +1,36 @@
+---
+title: "The Physics of Agentic AI"
+subtitle: "From Foundations to Recursive Self-Improvement"
+author: "Min"
+lang: en
+documentclass: book
+classoption:
+  - oneside
+  - openany
+pdf-engine: tectonic
+
+mainfont: "Noto Serif Myanmar"
+sansfont: "Noto Sans Myanmar"
+monofont: "JetBrains Mono"
+mathfont: "STIX Two Math"
+
+fontsize: 11pt
+linestretch: 1.35
+
+geometry:
+  - a4paper
+  - top=25mm
+  - bottom=30mm
+  - inner=30mm
+  - outer=25mm
+
+toc: true
+toc-depth: 2
+numbersections: true
+secnumdepth: 3
+
+linkcolor: blue
+citecolor: blue
+urlcolor: blue
+---
+
