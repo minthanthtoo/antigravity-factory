@@ -13,6 +13,14 @@ papers/
 __pycache__/
 *.pyc
 
+# Resolved Templates & Metadata
+*.resolved
+*.resolved.*
+*.metadata.json
+
+# Image Assets
+*.png
+
 # System
 .DS_Store
 *.log
