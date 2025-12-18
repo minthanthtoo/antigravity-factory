@@ -1,5 +1,5 @@
 try:
-    from researcher import ResearchEngine
+    from paper_curator import ResearchEngine
 except ImportError:
     ResearchEngine = None
 
@@ -27,9 +27,9 @@ class Orchestrator:
         self.prompts = self._load_prompts()
         self.counter = TokenCounter(budget=user_config.get("TOKEN_BUDGET", 5000000))
         
-        # Global Constitution Integration
+        # Master Prompt Template Integration
         self.master_ref = ""
-        v2_path = os.path.join(os.path.dirname(__file__), "constitution.md")
+        v2_path = os.path.join(os.path.dirname(__file__), "master_prompt_template.md")
         if os.path.exists(v2_path):
             with open(v2_path, 'r', encoding='utf-8') as f:
                 self.master_ref = f.read()

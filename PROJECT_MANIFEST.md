@@ -3,9 +3,9 @@
 This manifest summarizes the entire integrated system for high-fidelity technical publishing.
 
 ## 🏛️ System Core
-- **`factory.py`**: The Orchestration Engine. Manages agent coordination, context stitching, and build triggers.
-- **`researcher.py`**: The Autonomous Researcher. Handles arXiv API search and PDF acquisition.
-- **`constitution.md`**: The Systemic Protocols. Contains the **Grand Curation Prompt V2** and global anti-slop rules.
+- **`agents_orchestrator.py`**: The Central Engine. Manages agent coordination, context stitching, and build triggers.
+- **`paper_curator.py`**: The Research Acquisition Module. Handles autonomous arXiv API search and curation.
+- **`master_prompt_template.md`**: The Cognitive Architecture. Contains the **Grand Curation Prompt V2** and global "Constitutional" rules.
 
 ## 🧠 Cognitive Agents (`prompts/`)
 - **`architect.md`**: Structural synthesis and blueprint design.
@@ -16,8 +16,8 @@ This manifest summarizes the entire integrated system for high-fidelity technica
 ## 🛠️ Infrastructure
 - **`typeset.sh`**: Automated LaTeX/XeTeX build pipeline via Pandoc and Tectonic.
 - **`book_metadata.yaml`**: Typesetting parameters (Geometry, Fonts, TOC).
-- **`requirements.txt`**: Environment dependencies (ArXiv, Gemini, etc.).
-- **`.gitignore`**: Protection against accidental leaks of research papers or draft builds.
+- **`requirements.txt`**: Environment dependencies.
+- **`.gitignore`**: Protection against accidental leaks.
 
 ## 📂 Workspaces
 - **`/papers/`**: Input directory for source research material.
@@ -27,5 +27,5 @@ This manifest summarizes the entire integrated system for high-fidelity technica
 ---
 
 **Status**: HARDENED & PRODUCTION READY.
-**Theme**: O'Reilly Technical / Scientific Standard.
+**Theme**: Grand Curation / Technical Scientific Standard.
 **Capabilities**: Autonomous Search-to-PDF Pipeline.

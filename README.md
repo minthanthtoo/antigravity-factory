@@ -39,7 +39,7 @@ mkdir book_out # Generated chapters will appear here
 ## 🚀 3. Usage Instructions
 
 ### A. Automatic Research Acquisition
-The engine now supports autonomous research. Define your topic in the configuration block of `factory.py`:
+The engine now supports autonomous research. Define your topic in the configuration block of `agents_orchestrator.py`:
 
 ```python
 cfg = {
@@ -51,7 +51,7 @@ cfg = {
 
 Then simply run:
 ```bash
-python3 factory.py
+python3 agents_orchestrator.py
 ```
 The engine will fetch priority papers from arXiv and immediately begin drafting the book.
 
@@ -64,7 +64,7 @@ To compile the generated Markdown chapters into a high-fidelity PDF:
 ---
 
 ## 🌌 4. The "Zero-Dependency" Fallback
-If you are on a system without Python or LaTeX, use the **Singularity Prompt** (found in `protocols.md`). Paste it into any frontier AI (Claude 3.5, Gemini 1.5 Pro) to simulate the entire factory logic in a single turn.
+If you are on a system without Python or LaTeX, use the **Singularity Prompt** (found in `master_prompt_template.md`). Paste it into any frontier AI (Claude 3.5, Gemini 1.5 Pro) to simulate the entire factory logic in a single turn.
 
 ---
 
