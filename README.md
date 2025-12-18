@@ -38,6 +38,13 @@ mkdir book_out # Generated chapters will appear here
 
 ## 🚀 3. Usage Instructions
 
+### A. Automatic Paper Acquisition
+Populate your `./papers` directory directly from arXiv:
+```bash
+python3 fetch_papers.py --query "physics of agentic ai" --limit 5
+```
+
+### B. Launching the Generation Pipeline
 1. **Set API Key**: `export GOOGLE_API_KEY="your-key"`
 2. **Run Engine**: `python3 orchestrator_harness.py`
 3. **Build PDF**: `./build_book.sh` (Generates `The_Physics_of_Agentic_AI.pdf`)
