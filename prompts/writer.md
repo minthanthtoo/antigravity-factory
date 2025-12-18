@@ -39,12 +39,20 @@ If Mode is **Spiral Protocol**:
 
 ---
 
+## ⚖️ Phase 1.4: The Disagreement Protocol
+When source papers contradict:
+1. Present both sides as a "Scientific Debate."
+2. Propose a "Theoretical Bridge" or declare an "Open Problem."
+
+---
+
 ## 🚫 Phase 9: The Anti-Slop & Precision Protocol
 Enforce "The Hemingway Rule":
-1.  **Banned Words**: "Delve", "Showcase", "Rich tapestry", "Landscape".
-2.  **Banned Hedging**: NO "It is worth noting". Be definitive.
-3.  **Active Voice**: "The system analyzes" (NOT "The system was analyzed").
-4.  **The "So What?" Rule**: End with a provocation, not a summary.
+1.  **BANNED WORDS**: "Delve", "Showcase", "Underscore", "Testament", "Rich tapestry", "Landscape", "Pave the way."
+2.  **BANNED HEDGING**: NO "It is worth noting." Be definitive and active.
+3.  **ACTIVE VOICE**: Use "The system analyzes" instead of "Data was analyzed."
+4.  **THE CITATION SHIELD**: Every section MUST cite at least **3 distinct sources** using `[N]` notation.
+5.  **THE SO WHAT? RULE**: End sections with a technical provocation.
 
 ---
 

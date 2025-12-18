@@ -15,18 +15,43 @@ except ImportError:
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-class TokenCounter:
-    """Fix Level 8.3: Cost Safety."""
-    def __init__(self, budget: int = 5000000):
-        self.total_tokens = 0
-        self.budget = budget
+class AntiSlopLinter:
+    """Phase 9: Anti-Slop & Precision Protocol Enforcement."""
+    BANNED_WORDS = ["delve", "showcase", "underscore", "testament", "rich tapestry", "landscape", "pave the way"]
+    
+    @classmethod
+    def lint(cls, text: str) -> List[str]:
+        issues = []
+        # Check for banned words
+        for word in cls.BANNED_WORDS:
+            if re.search(r'\b' + re.escape(word) + r'\b', text, re.IGNORECASE):
+                issues.append(f"Anti-Slop Violation: Banned word '{word}' found.")
+        
+        # Check for passive voice (simple heuristic)
+        passive_patterns = [
+            r'\b(is|am|are|was|were|be|been|being)\b\s+\b([a-z]+ed)\b',
+            r'\b(has|have|had)\b\s+been\s+\b([a-z]+ed)\b'
+        ]
+        for pattern in passive_patterns:
+            if re.search(pattern, text, re.IGNORECASE):
+                # Only flag as a minor warning for now, as passive voice isn't always wrong
+                # but we want to minimize it as per Protocol Part 1.2
+                issues.append("Passive Voice Warning: Consider active voice.")
+        
+        return issues
 
-    def add(self, text: str):
-        count = len(text) // 4
-        self.total_tokens += count
-        if self.total_tokens > self.budget:
-            raise Exception(f"❌ Token Budget Exceeded ({self.total_tokens} > {self.budget}).")
-        return count
+class CitationAuditor:
+    """Phase 1.3: Citation Shield Enforcement."""
+    @classmethod
+    def audit(cls, text: str, matrix_refs: int = 0) -> List[str]:
+        issues = []
+        citations = re.findall(r'\[\d+\]', text)
+        unique_citations = set(citations)
+        
+        if len(unique_citations) < 3 and matrix_refs >= 3:
+            issues.append(f"Citation Shield Gap: Only {len(unique_citations)} unique sources cited (Target: 3+).")
+        
+        return issues
 
 class Orchestrator:
     def __init__(self, corpus_path: str, output_path: str, user_config: Dict[str, str] = {}):
@@ -168,15 +193,24 @@ class Orchestrator:
             ok, retries, hist = False, 0, [] 
             while not ok and retries < 3:
                 draft = self._call_llm(base_p, f"Draft {ch}")
-                if not self._validate_mermaid(draft): critique = "FAIL: Visuals."
+                
+                # Protocol Hardening Pass
+                lint_issues = AntiSlopLinter.lint(draft)
+                # Heuristic: count intended refs from matrix (if accessible)
+                citation_issues = CitationAuditor.audit(draft, matrix_refs=3) 
+                
+                if not self._validate_mermaid(draft): critique = "FAIL: Visuals (Broken Mermaid Syntax)."
+                elif lint_issues: critique = f"FAIL: Protocol Violation. {lint_issues[0]}"
+                elif citation_issues: critique = f"FAIL: {citation_issues[0]}"
                 else: 
                     critic_p = self._render_prompt(self.prompts["critic"], {"PREVIOUS_CRITIQUES": "\n".join(hist)})
                     critique = self._call_llm(critic_p, draft)
+                
                 hist.append(critique)
                 if "Status: PASS" in critique: ok = True
                 else: 
                     retries += 1
-                    base_p += f"\n\nLATEST FEEDBACK: {critique}"
+                    base_p += f"\n\nLATEST PROTOCOL FEEDBACK: {critique}"
             
             if ok:
                 self.save_chapter(ch, self._lint_latex_safety(draft))

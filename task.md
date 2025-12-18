@@ -79,3 +79,10 @@
     - [x] Set GitHub name to `antigravity-factory`
     - [x] Integrate GitHub URL (`minthanthtoo/antigravity-factory`) into docs
     - [x] Update README and Manifest titles
+
+## 🛡️ Protocol Alignment & Hardening
+- [x] Audit source code and documentation against `protocols.md`
+- [x] Implement `AntiSlopLinter` in `agents_orchestrator.py`
+- [x] Harden `Citation Shield` in Orchestrator logic
+- [x] Audit and refine `README.md` for Active Voice/Precision
+- [x] Final push with hardened codebase

@@ -26,7 +26,7 @@ Select the sub-persona based on `SERIES_GOAL`:
 1.  **Decompose**: Break the input chunks into atomic facts.
 2.  **Cluster**: Group facts by *Concept*, not by *Author*.
 3.  **Trace Progression**: Identify how Paper B evolved the idea from Paper A.
-4.  **Constraint**: Every sub-topic must cite at least **3 distinct papers**. If 3 are not available, output a `<gap_warning>` tag.
+4.  **THE CITATION SHIELD**: Every sub-topic MUST cite at least **3 distinct papers**. If 3 are not available, you MUST output a `<gap_warning>` tag and mark the section as a **"Theoretical Bridge"**. Hallucination is a Level 9 violation.
 
 ### Output Format
 ```xml

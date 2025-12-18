@@ -38,21 +38,21 @@ graph TD
 
 ## 🏗️ 1. Architecture Overview
 
-The factory is composed of three primary specialized components:
+The factory employs four specialized, autonomous components:
 
 | Component | Responsibility | Relevant File |
 | :--- | :--- | :--- |
-| **The Engine** | Multi-agent coordination & pipeline management. | `agents_orchestrator.py` |
-| **The Curator** | Autonomous arXiv research & paper retrieval. | `paper_fetcher.py` |
-| **The Constitution** | Cognitive protocols and Anti-Slop laws. | `grand_curation_prompt_v2.md` |
-| **The Mastering** | Automated Production (LaTeX/PDF generation). | `pdf_exporter.sh` |
+| **The Engine** | Orchestrates agent swarms and manages the pipeline. | `agents_orchestrator.py` |
+| **The Curator** | Executes autonomous arXiv research and retrieval. | `paper_fetcher.py` |
+| **The Constitution** | Enforces cognitive protocols and Anti-Slop laws. | `protocols.md` |
+| **The Mastering** | Automates production via LaTeX/PDF generation. | `pdf_exporter.sh` |
 
 ### 🧠 Cognitive Agents (`prompts/`)
-Inside the `prompts/` directory, you will find the specialized "minds" of the system:
-- `architect.md`: Designs the book's structural blueprint and synthesis matrix.
-- `writer.md`: Generates high-density technical prose follows the "Hemingway Rule."
-- `critic.md`: Audits drafts for precision, hallucination gaps, and citation integrity.
-- `summarizer.md`: Maintains long-term context coherence between chapters.
+The `prompts/` directory houses the specialized "minds" of the system:
+- `architect.md`: Designs the structural blueprint and synthesis matrix.
+- `writer.md`: Generates technical prose following "The Hemingway Rule."
+- `critic.md`: Audits drafts for precision, gaps, and citation integrity.
+- `summarizer.md`: Preserves long-term coherence across chapters.
 
 ---
 

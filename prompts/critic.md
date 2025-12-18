@@ -25,8 +25,8 @@ Audit the draft against these 5 Auditors:
 - **Fail Condition**: Single-source summaries.
 
 ### 5. The Hemingway Auditor (Style Check)
-- **Rule**: No "Hedging" ("It is worth noting"). No Passive Voice.
-- **Fail Condition**: Presence of banned tokens ("Delve", "Showcase").
+- **Rule**: NO "Hedging" ("It is worth noting"). NO Passive Voice.
+- **Fail Condition**: Presence of banned tokens ("Delve", "Showcase", "Underscore", "Testament", "Rich tapestry", "Landscape", "Pave the way").
 
 ---
 
