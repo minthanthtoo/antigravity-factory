@@ -40,6 +40,19 @@ class AntiSlopLinter:
         
         return issues
 
+class TokenCounter:
+    """Fix Level 8.3: Cost Safety."""
+    def __init__(self, budget: int = 5000000):
+        self.total_tokens = 0
+        self.budget = budget
+
+    def add(self, text: str):
+        count = len(text) // 4
+        self.total_tokens += count
+        if self.total_tokens > self.budget:
+            raise Exception(f"❌ Token Budget Exceeded ({self.total_tokens} > {self.budget}).")
+        return count
+
 class CitationAuditor:
     """Phase 1.3: Citation Shield Enforcement."""
     @classmethod
@@ -140,10 +153,17 @@ class Orchestrator:
     def _mock_llm_response(self, system_prompt: str) -> str:
         time.sleep(0.1)
         role_part = system_prompt.split("### SPECIFIC AGENT ROLE:")[-1]
-        if "Architect" in role_part: return "<synthesis_matrix>X: [1]</synthesis_matrix>## Outline\n- Introduction"
-        if "Writer" in role_part: return "# Chapter Content\nDraft using [1]..."
-        if "Critic" in role_part: return "Status: PASS"
-        return "Summary preserving [1]."
+        
+        if "# The Architect" in role_part or "# 🏗️ The Architect" in role_part:
+            return "<synthesis_matrix>\n<topic name='Foundation'>\n<source id='1'>Logic</source>\n<source id='2'>Reasoning</source>\n<source id='3'>Tools</source>\n</topic>\n</synthesis_matrix>\n## Outline\n- Introduction"
+        
+        if "# The Writer" in role_part or "# ✍️ The Writer" in role_part:
+            return "# Chapter Content\nThe system executes the logic described in [1], [2], and [3]. This approach ensures technical rigor."
+        
+        if "# The Critic" in role_part or "# 🧪 The Critic" in role_part:
+            return "Status: PASS"
+            
+        return "Summary preserving [1], [2], and [3]."
 
     _call_llm = _call_llm_with_retry
 
@@ -171,6 +191,13 @@ class Orchestrator:
             self._acquire_papers(self.user_config["SEARCH_QUERY"], int(self.user_config.get("PAPER_LIMIT", 5)))
 
         docs = glob.glob(os.path.join(self.corpus_path, "*.pdf")) + glob.glob(os.path.join(self.corpus_path, "*.md"))
+        
+        if not docs:
+            print("\033[0;31m❌ ERROR: No research papers found in corpus path.\033[0m")
+            logging.warning("⚠️ Research corpus is empty. Falling back to MOCK SYNTHESIS for demonstration.")
+            # We continue with the pipeline which will use the _mock_llm_response
+            # This satisfies the "continue mock export" requirement.
+
         manifest = {"chapters": {}, "status": "IN_PROGRESS"} 
         
         # Step 1: Architect
