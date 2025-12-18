@@ -39,7 +39,7 @@ mkdir book_out # Generated chapters will appear here
 ## 🚀 3. Usage Instructions
 
 ### A. Automatic Research Acquisition
-The engine now supports autonomous research. Define your topic in the configuration block of `orchestrator_harness.py`:
+The engine now supports autonomous research. Define your topic in the configuration block of `agents_orchestrator.py`:
 
 ```python
 cfg = {
@@ -51,14 +51,14 @@ cfg = {
 
 Then simply run:
 ```bash
-python3 orchestrator_harness.py
+python3 agents_orchestrator.py
 ```
 The engine will fetch priority papers from arXiv and immediately begin drafting the book.
 
 ### B. Compilation
 To compile the generated Markdown chapters into a high-fidelity PDF:
 ```bash
-./build_book.sh
+./pdf_exporter.sh
 ```
 
 ---

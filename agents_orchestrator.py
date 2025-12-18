@@ -1,5 +1,5 @@
 try:
-    from research_engine import ResearchEngine
+    from paper_fetcher import ResearchEngine
 except ImportError:
     ResearchEngine = None
 
@@ -200,7 +200,7 @@ class Orchestrator:
             if not os.path.exists("refs.bib"):
                 with open("refs.bib", 'w') as f: f.write("@misc{placeholder, title={Placeholder}}")
 
-            script = os.path.join(os.path.dirname(__file__), "build_book.sh")
+            script = os.path.join(os.path.dirname(__file__), "pdf_exporter.sh")
             if os.path.exists(script):
                 subprocess.run(["bash", script])
                 logging.info("📚 PDF/HTML Generation finished.")
