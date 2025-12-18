@@ -26,7 +26,7 @@ pip install -r requirements.txt
 ### B. Typesetting Stack (Optional but Recommended)
 To generate the high-quality PDF:
 1. **Pandoc**: The document converter.
-2. **Tectonic**: The LaTeX/XeTeX engine (handles font downloading automatically).
+2. **Tectonic**: The LaTeX/XeTeX engine.
 
 ### C. Directory Preparation
 ```bash
@@ -39,7 +39,7 @@ mkdir book_out # Generated chapters will appear here
 ## 🚀 3. Usage Instructions
 
 ### A. Automatic Research Acquisition
-The engine now supports autonomous research. Define your topic in the configuration block of `orchestrator_harness.py`:
+The engine now supports autonomous research. Define your topic in the configuration block of `factory.py`:
 
 ```python
 cfg = {
@@ -51,14 +51,20 @@ cfg = {
 
 Then simply run:
 ```bash
-python3 orchestrator_harness.py
+python3 factory.py
 ```
 The engine will fetch priority papers from arXiv and immediately begin drafting the book.
+
+### B. Compilation
+To compile the generated Markdown chapters into a high-fidelity PDF:
+```bash
+./typeset.sh
+```
 
 ---
 
 ## 🌌 4. The "Zero-Dependency" Fallback
-If you are on a system without Python or LaTeX, use the **Singularity Prompt** (found in `grand_curation_prompt_v2.md`). Paste it into any frontier AI (Claude 3.5, Gemini 1.5 Pro) to simulate the entire factory logic in a single turn.
+If you are on a system without Python or LaTeX, use the **Singularity Prompt** (found in `protocols.md`). Paste it into any frontier AI (Claude 3.5, Gemini 1.5 Pro) to simulate the entire factory logic in a single turn.
 
 ---
 

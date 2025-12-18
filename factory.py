@@ -26,6 +26,14 @@ class Orchestrator:
         self.user_config = user_config
         self.prompts = self._load_prompts()
         self.counter = TokenCounter(budget=user_config.get("TOKEN_BUDGET", 5000000))
+        
+        # Global Constitution Integration
+        self.master_ref = ""
+        v2_path = os.path.join(os.path.dirname(__file__), "constitution.md")
+        if os.path.exists(v2_path):
+            with open(v2_path, 'r', encoding='utf-8') as f:
+                self.master_ref = f.read()
+                
         self._validate_environment()
 
     def _validate_environment(self):
@@ -65,16 +73,18 @@ class Orchestrator:
         return rendered
 
     def _call_llm_with_retry(self, system_prompt: str, user_content: str, max_retries: int = 3) -> str:
-        self.counter.add(system_prompt + user_content)
+        # Enforce global protocols from constitution.md
+        full_system_prompt = f"{self.master_ref}\n\n### SPECIFIC AGENT ROLE:\n{system_prompt}"
+        self.counter.add(full_system_prompt + user_content)
         attempt = 0
         while attempt < max_retries:
             try:
                 if "GOOGLE_API_KEY" in os.environ:
-                    response = self._call_real_gemini(system_prompt, user_content)
+                    response = self._call_real_gemini(full_system_prompt, user_content)
                     self.counter.add(response)
                     return response
                 else:
-                    return self._mock_llm_response(system_prompt)
+                    return self._mock_llm_response(full_system_prompt)
             except Exception as e:
                 attempt += 1
                 wait_time = 2 ** attempt
