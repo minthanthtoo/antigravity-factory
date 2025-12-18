@@ -61,9 +61,21 @@
     - [x] Integrate with `requirements.txt`
     - [x] Update `README.md` with acquisition instructions
 - [x] Unified Engine Merge
-    - [x] Integrate search logic into `engine.py`
+    - [x] Integrate search logic into `agents_orchestrator.py`
     - [x] Implement autonomous "Phase 0" research step
     - [x] Cleanup standalone scripts
 - [x] Naming System Refactor
-    - [x] Rename core components (Engine, Fetcher, Protocols, Typeset)
+    - [x] Rename core components (Agents Orchestrator, Paper Fetcher, PDF Exporter)
     - [x] Update internal references and documentation
+- [x] Next-Gen Model Support
+    - [x] Implement dynamic `MODEL_NAME` selection
+    - [x] Support Gemini 2.0/3.0 and Gemma (9b/27b) variants
+- [x] High-Clarity Documentation & Visuals
+    - [x] Overhaul `README.md` for professional polish
+    - [x] Generate Input/Output motivation previews (Grounded)
+    - [x] Implement Mermaid data-flow diagram (Vertical/Legible)
+    - [x] Refine Motivation Section UI/UX (Centered/Side-by-Side)
+- [x] Final Project Branding
+    - [x] Set GitHub name to `antigravity-factory`
+    - [x] Integrate GitHub URL (`minthanthtoo/antigravity-factory`) into docs
+    - [x] Update README and Manifest titles

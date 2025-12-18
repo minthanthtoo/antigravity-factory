@@ -1,71 +1,117 @@
-# 📖 README: Antigravity Publishing Engine
+# 📖 antigravity-factory v1.0
 
-This system allows you to generate professional, typeset textbooks from raw research papers using a multi-agent AI pipeline.
+> **The industrial-grade AI pipeline for high-fidelity technical publishing.**
+>
+> 🔗 [GitHub Repository](https://github.com/minthanthtoo/antigravity-factory)
 
-## 🌍 1. Cross-System Support
+# 🌌 The Motivation: Research Synthesis at Scale
 
-The "Publishing Factory" (Python Engine) is designed for portability:
+The Antigravity Engine streamlines the transition from **Literature Review** to **Published Knowledge**. It autonomously groups hundreds of scattered research papers and synthesizes them into a single, high-fidelity LaTeX textbook.
 
-| Platform | Support Level | Requirements |
-| :--- | :--- | :--- |
-| **macOS** | Native | Homebrew, Python 3.10+ |
-| **Linux** | Native | Apt/Yum, Python 3.10+ |
-| **Windows** | via WSL | Ubuntu/Debian on WSL2 |
-| **Mobile/No-Code**| via Prompts | Use the "Singularity Prompt" below |
+<p align="center">
+  <img src="/Users/min/.gemini/antigravity/brain/789b4050-ebd1-435f-9527-846b3f3806b5/raw_papers_grounded_1766096935014.png" width="35%" />
+  <img src="/Users/min/.gemini/antigravity/brain/789b4050-ebd1-435f-9527-846b3f3806b5/typeset_book_grounded_1766096950459.png" width="35%" />
+</p>
+
+<p align="center">
+  <b>Source: Raw Academic Corpus</b> &nbsp; ➔ &nbsp; <b>Output: Synthesized LaTeX Book</b>
+</p>
+
+### 🗺️ Data Flow Diagram
+```mermaid
+graph TD
+    A["Raw Papers (.pdf/.md)"] --> B["Paper Fetcher (Autonomous)"]
+    B --> C["Agents Orchestrator"]
+    
+    subgraph Engine ["The Engine"]
+        C --> D["Architect (Blueprint)"]
+        D --> E["Writer (Drafting)"]
+        E --> F["Critic (Audit)"]
+        F -- "Iterative Polish" --> E
+    end
+    
+    F --> G["PDF Exporter (LaTeX)"]
+    G --> H["Finished Textbook"]
+```
 
 ---
 
-## 🛠️ 2. Setup & Installation
+## 🏗️ 1. Architecture Overview
 
-### A. Python Dependencies
-Install the required libraries:
+The factory is composed of three primary specialized components:
+
+| Component | Responsibility | Relevant File |
+| :--- | :--- | :--- |
+| **The Engine** | Multi-agent coordination & pipeline management. | `agents_orchestrator.py` |
+| **The Curator** | Autonomous arXiv research & paper retrieval. | `paper_fetcher.py` |
+| **The Constitution** | Cognitive protocols and Anti-Slop laws. | `grand_curation_prompt_v2.md` |
+| **The Mastering** | Automated Production (LaTeX/PDF generation). | `pdf_exporter.sh` |
+
+### 🧠 Cognitive Agents (`prompts/`)
+Inside the `prompts/` directory, you will find the specialized "minds" of the system:
+- `architect.md`: Designs the book's structural blueprint and synthesis matrix.
+- `writer.md`: Generates high-density technical prose follows the "Hemingway Rule."
+- `critic.md`: Audits drafts for precision, hallucination gaps, and citation integrity.
+- `summarizer.md`: Maintains long-term context coherence between chapters.
+
+---
+
+## 🛠️ 2. Rapid Setup
+
+### A. Environment
+Ensure you have Python 3.10+ and the required dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-### B. Typesetting Stack (Optional but Recommended)
-To generate the high-quality PDF:
-1. **Pandoc**: The document converter.
-2. **Tectonic**: The LaTeX/XeTeX engine.
-
-### C. Directory Preparation
+### B. API Configuration
+The factory uses the Google Gemini API. Set your key as an environment variable:
 ```bash
-mkdir papers   # Put your source PDF/MD files here
-mkdir book_out # Generated chapters will appear here
+export GOOGLE_API_KEY="your_api_key_here"
+```
+
+### C. Directory Structure
+```bash
+mkdir papers   # Input: Drop PDFs or MD research files here.
+mkdir book_out # Output: Final validated chapters appear here.
 ```
 
 ---
 
-## 🚀 3. Usage Instructions
+## 🚀 3. Production Workflow
 
-### A. Automatic Research Acquisition
-The engine now supports autonomous research. Define your topic in the configuration block of `agents_orchestrator.py`:
-
+### Step 1: Configure Your Project
+Open `agents_orchestrator.py` and update the `cfg` block:
 ```python
 cfg = {
     "SEARCH_QUERY": "physics of agentic ai",
-    "PAPER_LIMIT": "5",
-    "CORPUS_PATH": "./papers"
+    "PAPER_LIMIT": 5,
+    "MODEL_NAME": "gemini-2.0-flash-exp", # Options: gemini-2.0-flash-exp, gemini-3.0-pro, gemma-2-27b-it
 }
 ```
 
-Then simply run:
+### Step 2: Trigger the Pipeline
+Run the orchestrator to fetch research and draft the book:
 ```bash
 python3 agents_orchestrator.py
 ```
-The engine will fetch priority papers from arXiv and immediately begin drafting the book.
 
-### B. Compilation
-To compile the generated Markdown chapters into a high-fidelity PDF:
+### Step 3: Export to PDF
+Compile the drafts using the production-grade LaTeX builder:
 ```bash
 ./pdf_exporter.sh
 ```
 
 ---
 
-## 🌌 4. The "Zero-Dependency" Fallback
-If you are on a system without Python or LaTeX, use the **Singularity Prompt** (found in `grand_curation_prompt_v2.md`). Paste it into any frontier AI (Claude 3.5, Gemini 1.5 Pro) to simulate the entire factory logic in a single turn.
+## 🌌 4. Advanced Features
+
+> [!IMPORTANT]
+> **Level 9 Hardening**: This engine is protected against "Strategic Drift." Every turn is audited by a Critic Swarm focusing on citation integrity and active-voice precision.
+
+> [!TIP]
+> **Singularity Prompt**: Found in `grand_curation_prompt_v2.md`. Use this for "zero-dependency" manual generation in any frontier LLM (Gemini 1.5 Pro, Claude 3.5).
 
 ---
 
-**Built with Antigravity v1.0**
+**© 2025 Antigravity AI Systems** | *Drafting the Future of Agentic Intelligence.*

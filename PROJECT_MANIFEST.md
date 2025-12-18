@@ -1,6 +1,8 @@
-# 🏗️ The Publishing Factory: Full Project Manifest (v1.0)
+# Project Manifest: antigravity-factory v1.0
 
 This manifest summarizes the entire integrated system for high-fidelity technical publishing.
+
+🔗 **Repository**: [github.com/minthanthtoo/antigravity-factory](https://github.com/minthanthtoo/antigravity-factory)
 
 ## 🏛️ System Core
 - **`agents_orchestrator.py`**: The Central Engine. Manages agent coordination, context stitching, and build triggers.
