@@ -1,11 +1,7 @@
-import os
-import sys
-import glob
-import logging
-import re
-import time
-import subprocess
-from typing import List, Dict, Optional, Tuple
+try:
+    from researcher import ResearchEngine
+except ImportError:
+    ResearchEngine = None
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -38,6 +34,18 @@ class Orchestrator:
             if self.user_config.get("STRICT_MODE", False):
                 raise Exception("❌ Environment Error: No API Key found.")
             logging.warning("⚠️ No API Key found. Running in MOCK MODE.")
+        
+        if ResearchEngine is None and "SEARCH_QUERY" in self.user_config:
+            logging.warning("⚠️ 'research_engine' module not found. Search functionality will be disabled.")
+
+    def _acquire_papers(self, query: str, limit: int = 5):
+        """Trigger the modular Research Engine."""
+        if ResearchEngine is None:
+            logging.error("❌ Cannot acquire papers: ResearchEngine module missing.")
+            return
+
+        engine = ResearchEngine(self.corpus_path)
+        engine.search_and_download(query, limit)
 
     def _load_prompts(self) -> Dict[str, str]:
         prompt_dir = os.path.join(os.path.dirname(__file__), "prompts")
@@ -112,6 +120,11 @@ class Orchestrator:
 
     def execute_pipeline(self):
         logging.info("🚀 Starting Pipeline...")
+        
+        # Phase 0: Acquisition
+        if "SEARCH_QUERY" in self.user_config:
+            self._acquire_papers(self.user_config["SEARCH_QUERY"], int(self.user_config.get("PAPER_LIMIT", 5)))
+
         docs = glob.glob(os.path.join(self.corpus_path, "*.pdf")) + glob.glob(os.path.join(self.corpus_path, "*.md"))
         manifest = {"chapters": {}, "status": "IN_PROGRESS"} 
         
@@ -177,7 +190,7 @@ class Orchestrator:
             if not os.path.exists("refs.bib"):
                 with open("refs.bib", 'w') as f: f.write("@misc{placeholder, title={Placeholder}}")
 
-            script = os.path.join(os.path.dirname(__file__), "build_book.sh")
+            script = os.path.join(os.path.dirname(__file__), "typeset.sh")
             if os.path.exists(script):
                 subprocess.run(["bash", script])
                 logging.info("📚 PDF/HTML Generation finished.")

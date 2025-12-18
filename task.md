@@ -61,6 +61,9 @@
     - [x] Integrate with `requirements.txt`
     - [x] Update `README.md` with acquisition instructions
 - [x] Unified Engine Merge
-    - [x] Integrate search logic into `orchestrator_harness.py`
+    - [x] Integrate search logic into `factory.py`
     - [x] Implement autonomous "Phase 0" research step
     - [x] Cleanup standalone scripts
+- [x] Naming System Refactor
+    - [x] Rename core components (Factory, Researcher, Protocols, Typeset)
+    - [x] Update internal references and documentation
