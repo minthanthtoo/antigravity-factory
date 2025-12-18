@@ -7,7 +7,8 @@ This manifest summarizes the entire integrated system for high-fidelity technica
 ## 🏛️ System Core
 - **`agents_orchestrator.py`**: The Central Engine. Manages agent coordination, context stitching, and build triggers.
 - **`paper_fetcher.py`**: The Research Acquisition Module. Handles autonomous arXiv API search and retrieval.
-- **`grand_curation_prompt_v2.md`**: The Cognitive Architecture. Contains the foundational rules and systemic protocols.
+- **`grand_curation_prompt_v2.md`**: The Cognitive Architecture. Contains the foundational rules.
+- **`protocols.md`**: The Master Logic Reference. Consolidates technical and cognitive rules.
 
 ## 🧠 Cognitive Agents (`prompts/`)
 - **`architect.md`**: Structural synthesis and blueprint design.
