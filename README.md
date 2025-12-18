@@ -38,16 +38,22 @@ mkdir book_out # Generated chapters will appear here
 
 ## 🚀 3. Usage Instructions
 
-### A. Automatic Paper Acquisition
-Populate your `./papers` directory directly from arXiv:
-```bash
-python3 fetch_papers.py --query "physics of agentic ai" --limit 5
+### A. Automatic Research Acquisition
+The engine now supports autonomous research. Define your topic in the configuration block of `orchestrator_harness.py`:
+
+```python
+cfg = {
+    "SEARCH_QUERY": "physics of agentic ai",
+    "PAPER_LIMIT": "5",
+    "CORPUS_PATH": "./papers"
+}
 ```
 
-### B. Launching the Generation Pipeline
-1. **Set API Key**: `export GOOGLE_API_KEY="your-key"`
-2. **Run Engine**: `python3 orchestrator_harness.py`
-3. **Build PDF**: `./build_book.sh` (Generates `The_Physics_of_Agentic_AI.pdf`)
+Then simply run:
+```bash
+python3 orchestrator_harness.py
+```
+The engine will fetch priority papers from arXiv and immediately begin drafting the book.
 
 ---
 
