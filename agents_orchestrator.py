@@ -9,13 +9,87 @@ import argparse
 from typing import Dict, List
 
 try:
-    from .paper_fetcher import ResearchEngine
+    from paper_fetcher import ResearchEngine
 except ImportError as e:
     logging.warning(f"ResearchEngine Import Failed: {e}")
     ResearchEngine = None
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+class LocalIntelligence:
+    """Fallback Engine using Local Transformer Models."""
+    def __init__(self):
+        self.model = None
+        self.tokenizer = None
+        self.pipeline = None
+        self.device = "cpu"
+        if os.uname().sysname == "Darwin":
+             # Check for Apple Silicon
+             try:
+                 import torch
+                 if torch.backends.mps.is_available():
+                     self.device = "mps"
+             except: pass
+        
+    def assess_hardware(self) -> Dict:
+        import subprocess
+        try:
+            ram_bytes = int(subprocess.check_output(["sysctl", "-n", "hw.memsize"]).strip())
+            ram_gb = ram_bytes / (1024**3)
+        except:
+            ram_gb = 8 # Assumption if check fails
+            
+        rec = {
+            "ram_gb": round(ram_gb, 1),
+            "recommended_model": "google/gemma-2b-it",
+            "reason": "Fits in 8GB RAM (FP16)"
+        }
+        
+        if ram_gb >= 16:
+            rec["recommended_model"] = "google/gemma-7b-it"
+            rec["reason"] = "High RAM detected, using 7B model."
+        elif ram_gb < 8:
+            rec["recommended_model"] = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+            rec["reason"] = "Low RAM detected, using TinyLlama."
+            
+        return rec
+
+    def load_engine(self, model_id: str):
+        logging.info(f"⚙️ Loading Local Model: {model_id} on {self.device}...")
+        try:
+            from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+            import torch
+            
+            dtype = torch.float16 if self.device in ["mps", "cuda"] else torch.float32
+            
+            self.tokenizer = AutoTokenizer.from_pretrained(model_id)
+            self.model = AutoModelForCausalLM.from_pretrained(
+                model_id, 
+                torch_dtype=dtype,
+                device_map=self.device if self.device != "mps" else None # HF accelerate handles mps poorly sometimes, manual to come
+            )
+            if self.device == "mps":
+                self.model.to("mps")
+                
+            self.pipeline = pipeline(
+                "text-generation",
+                model=self.model,
+                tokenizer=self.tokenizer,
+                max_new_tokens=2048
+            )
+            logging.info("✅ Local Engine Online.")
+        except Exception as e:
+            logging.error(f"Failed to load local model: {e}")
+            raise
+
+    def generate(self, system_prompt: str, user_prompt: str) -> str:
+        messages = [
+            {"role": "user", "content": f"{system_prompt}\n\nTask: {user_prompt}"}
+        ]
+        prompt = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        outputs = self.pipeline(prompt, do_sample=True, temperature=0.7)
+        return outputs[0]["generated_text"][len(prompt):]
 
 class AntiSlopLinter:
     """Phase 9: Anti-Slop & Precision Protocol Enforcement."""
@@ -121,8 +195,9 @@ class ConfigManager:
         if start_date: config["START_DATE"] = start_date
         if end_date: config["END_DATE"] = end_date
         
-        if not config.get("SEARCH_QUERY") and config.get("KEYWORDS"):
-            config["SEARCH_QUERY"] = config["KEYWORDS"]
+        if not config.get("SEARCH_QUERY"):
+            if config.get("KEYWORDS"): config["SEARCH_QUERY"] = config["KEYWORDS"]
+            elif config.get("RESEARCH_GOAL"): config["SEARCH_QUERY"] = config["RESEARCH_GOAL"]
 
         return config
 
@@ -131,6 +206,7 @@ class Orchestrator:
         self.user_config = user_config
         self.corpus_path = user_config.get("CORPUS_PATH", "./papers")
         self.output_path = user_config.get("OUTPUT_PATH", "./book_out")
+        self.book_name = user_config.get("BOOK_NAME", "The Physics of Agentic AI")
         self.prompts = self._load_prompts()
         self.counter = TokenCounter(budget=user_config.get("TOKEN_BUDGET", 5000000))
         
@@ -142,6 +218,7 @@ class Orchestrator:
                 self.master_ref = f.read()
 
         self.mock_enabled = self.user_config.get("MOCK_MODE", False)
+        self.local_brain = LocalIntelligence()
         self.book_name = self._determine_book_name()
         self._validate_environment()
 
@@ -168,19 +245,33 @@ class Orchestrator:
         api_key = self.user_config.get("GOOGLE_API_KEY") or os.environ.get("GOOGLE_API_KEY")
         has_key = api_key is not None or "OPENAI_API_KEY" in os.environ
         
-        if not has_key:
-            if not self.mock_enabled:
-                print("\n⚠️  Security Alert: Real Mode active but no API Key found.")
-                try:
-                    user_key = input("🔑 Please paste your GOOGLE_API_KEY to continue: ").strip()
-                    if user_key:
-                        self.user_config["GOOGLE_API_KEY"] = user_key
-                        os.environ["GOOGLE_API_KEY"] = user_key
-                        logging.info("API Key injected into runtime.")
+        if not has_key and not self.mock_enabled:
+            print("\n⚠️  Security Alert: Real Mode active but no API Key found.")
+            print("You have two options:")
+            print("1. Enter GOOGLE_API_KEY")
+            print("2. Download/Use Local LLM (HuggingFace)")
+            
+            try:
+                choice = input("Enter Key or press [L] for Local LLM: ").strip()
+                if choice.lower() == 'l':
+                    rec = self.local_brain.assess_hardware()
+                    print(f"\n🖥️  Hardware Check: {rec['ram_gb']}GB RAM Detected.")
+                    print(f"💡 Recommended: {rec['recommended_model']} ({rec['reason']})")
+                    
+                    ans = input(f"Download and load {rec['recommended_model']}? [Y/n]: ").strip().lower()
+                    if ans != 'n':
+                        model = input(f"Confirm model ID (default: {rec['recommended_model']}): ").strip() or rec['recommended_model']
+                        self.local_brain.load_engine(model)
                     else:
-                        raise Exception("No key provided. Aborting.")
-                except EOFError:
-                    raise Exception("CRITICAL ERROR: No API Key found and non-interactive environment.")
+                        raise Exception("Aborted by user.")
+                elif choice:
+                    self.user_config["GOOGLE_API_KEY"] = choice
+                    os.environ["GOOGLE_API_KEY"] = choice
+                    logging.info("API Key injected into runtime.")
+                else:
+                    raise Exception("No key provided. Aborting.")
+            except EOFError:
+                raise Exception("CRITICAL ERROR: No API Key found and non-interactive environment.")
         
         if ResearchEngine is None and "SEARCH_QUERY" in self.user_config:
             logging.warning("WARNING: 'paper_fetcher' module not found. Search functionality will be disabled.")
@@ -250,7 +341,7 @@ class Orchestrator:
             import google.generativeai as genai
             api_key = self.user_config.get("GOOGLE_API_KEY") or os.environ.get("GOOGLE_API_KEY")
             genai.configure(api_key=api_key)
-            model_name = self.user_config.get("MODEL_NAME", "gemini-2.0-flash-exp")
+            model_name = self.user_config.get("MODEL_NAME", "gemini-3-flash-preview")
             model = genai.GenerativeModel(model_name)
             response = model.generate_content(f"SYSTEM: {system_prompt}\nUSER: {user_content}")
             return response.text
@@ -397,53 +488,75 @@ class Orchestrator:
         else:
             logging.error("ABORTED: Incomplete Manifest.")
 
+    def _sanitize_filename(self, text: str) -> str:
+        # Remove colons, replace spaces, keep alphanumeric/dashes
+        # Example: "Chapter 2: Logic" -> "chapter_2_logic"
+        stage_1 = text.lower().replace(" ", "_").replace(":", "").replace("/", "_")
+        return re.sub(r'[^a-z0-9_.-]', '', stage_1)
+
     def trigger_build_pipeline(self, manifest: Dict):
-        file_basename = re.sub(r'[^a-z0-9_]', '', self.book_name.lower().replace(' ', '_'))
-        master_file = f"{file_basename}_full.md"
-        logging.info(f"Stitching master file: {master_file}...")
+        # 1. Setup Isolated Build Directory
+        safe_name = self._sanitize_filename(self.book_name)
+        build_dir = os.path.join(self.output_path, safe_name)
+        os.makedirs(build_dir, exist_ok=True)
+        
+        logging.info(f"🧵 Stitching master file in: {build_dir}")
+        master_fn = f"{safe_name}_full.md"
+        master_path = os.path.join(build_dir, master_fn)
+        
         try:
-            with open(master_file, 'w', encoding='utf-8') as master:
+            # 2. Stitch Chapters
+            with open(master_path, 'w', encoding='utf-8') as master:
                 for ch in manifest["chapters"].keys():
-                    fn = f"{ch.lower().replace(' ', '_')}.md"
-                    path = os.path.join(self.output_path, fn)
-                    if os.path.exists(path):
-                        with open(path, 'r', encoding='utf-8') as f:
+                    fn = f"{self._sanitize_filename(ch)}.md"
+                    src_path = os.path.join(build_dir, fn)
+                    if os.path.exists(src_path):
+                        with open(src_path, 'r', encoding='utf-8') as f:
                             master.write(f.read() + "\n\n")
             
-            if not os.path.exists("refs.bib"):
-                with open("refs.bib", 'w') as f: f.write("@misc{placeholder, title={Placeholder}}")
+            # 3. Create Bibliography
+            bib_path = os.path.join(build_dir, "refs.bib")
+            if not os.path.exists(bib_path):
+                with open(bib_path, 'w') as f: f.write("@misc{placeholder, title={Placeholder}}")
 
+            # 4. Trigger Export
+            output_fmt = self.user_config.get("OUTPUT_FORMAT", "pdf")
             script = os.path.join(os.path.dirname(__file__), "pdf_exporter.sh")
-            if os.path.exists(script):
-                output_fmt = self.user_config.get("OUTPUT_FORMAT", "pdf")
-                if output_fmt == "json":
-                    logging.info("Exporting synthesis metadata to JSON...")
-                    # Metadata managed by paper_fetcher.py and chapter generation
-                elif output_fmt == "epub":
-                    logging.info("Generating EPUB via Pandoc...")
-                    master_file = f"{file_basename}_full.md"
-                    output_file = f"{file_basename}.epub"
-                    subprocess.run(["pandoc", master_file, "-o", output_file, "--metadata", f"title={self.book_name}"])
-                elif output_fmt == "docx":
-                    logging.info("Generating DOCX via Pandoc...")
-                    master_file = f"{file_basename}_full.md"
-                    output_file = f"{file_basename}.docx"
-                    subprocess.run(["pandoc", master_file, "-o", output_file, "--reference-doc=reference.docx" if os.path.exists("reference.docx") else None, "--metadata", f"title={self.book_name}"])
-                elif output_fmt == "latex":
-                    logging.info("Generating LaTeX Source via Pandoc...")
-                    master_file = f"{file_basename}_full.md"
-                    output_file = f"{file_basename}.tex"
-                    subprocess.run(["pandoc", master_file, "-o", output_file, "--standalone", "--metadata", f"title={self.book_name}"])
+            abs_script = os.path.abspath(script)
+            
+            if output_fmt == "pdf":
+                if os.path.exists(script):
+                    subprocess.run(["bash", abs_script, self.book_name], cwd=build_dir)
+                    logging.info(f"📚 PDF Generation finished in {build_dir}")
                 else:
-                    subprocess.run(["bash", script, self.book_name])
-                logging.info(f"Generation for {output_fmt} finished.")
+                    logging.warning("⚠️ pdf_exporter.sh not found. Skipping PDF build.")
+            
+            elif output_fmt == "epub":
+                logging.info(f"Generating EPUB for {safe_name}...")
+                subprocess.run(["pandoc", master_fn, "-o", f"{safe_name}.epub", "--metadata", f"title={self.book_name}"], cwd=build_dir)
+                
+            elif output_fmt == "docx":
+                logging.info(f"Generating DOCX for {safe_name}...")
+                subprocess.run(["pandoc", master_fn, "-o", f"{safe_name}.docx", "--metadata", f"title={self.book_name}"], cwd=build_dir)
+                
+            elif output_fmt == "latex":
+                logging.info(f"Generating LaTeX for {safe_name}...")
+                subprocess.run(["pandoc", master_fn, "-o", f"{safe_name}.tex", "--metadata", f"title={self.book_name}"], cwd=build_dir)
+
+            elif output_fmt == "json":
+                logging.info("JSON Metadata export skipped (managed by catalog).")
+
         except Exception as e:
-            logging.error(f"Mastering failed: {e}")
+            logging.error(f"❌ Mastering failed: {e}")
 
     def save_chapter(self, title: str, content: str):
-        fn = f"{title.lower().replace(' ', '_')}.md"
-        os.makedirs(self.output_path, exist_ok=True)
-        with open(os.path.join(self.output_path, fn), 'w', encoding='utf-8') as f: f.write(content)
+        # Save to isolated build directory
+        safe_name = self._sanitize_filename(self.book_name)
+        build_dir = os.path.join(self.output_path, safe_name)
+        os.makedirs(build_dir, exist_ok=True)
+        
+        fn = f"{self._sanitize_filename(title)}.md"
+        with open(os.path.join(build_dir, fn), 'w', encoding='utf-8') as f: f.write(content)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="antigravity-factory Orchestrator")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-from antigravity.agents_orchestrator import ConfigManager, Orchestrator
+from agents_orchestrator import ConfigManager, Orchestrator
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Antigravity Factory v1.0")
@@ -29,5 +29,11 @@ if __name__ == "__main__":
     parser.add_argument("-F", "--format", choices=["pdf", "html", "epub", "docx", "latex", "json", "md"], help="Final output format")
 
     args = parser.parse_args()
-    cfg = ConfigManager.load(args)
-    Orchestrator(cfg).execute_pipeline()
+    try:
+        cfg = ConfigManager.load(args)
+        Orchestrator(cfg).execute_pipeline()
+        print("\n✅ \033[0;32mFactory Pipeline Complete.\033[0m")
+    except KeyboardInterrupt:
+        print("\n\n⚠️ \033[0;33mPipeline interrupted by user.\033[0m")
+    except Exception as e:
+        print(f"\n❌ \033[0;31mPipeline Failed: {e}\033[0m")

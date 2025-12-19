@@ -59,12 +59,12 @@ Instead of using CLI flags every time, create a `factory_config.json` file in th
 ```
 
 ### ✅ Verified Models (2025)
+### ✅ Verified Models (2025)
 The factory is optimized for the following engines:
-*   `gemini-2.5-flash` (High Speed, Logic)
-*   `gemini-2.5-flash-lite` (Cost Efficient)
+*   `gemini-3-flash-preview` (Latest, Reasoning-Heavy)
+*   `gemini-2.0-flash-exp` (Stable Fallback)
 *   `models/gemma-3-27b-it` (Open Weight Powerhouse)
 *   `gemma-3-12b` (Balanced)
-*   `gemini-3-flash` (Next-Gen)
 
 
 ### 🎛️ Configuration Reference
@@ -169,6 +169,47 @@ graph TD
 > 1.  **Citation Integrity**: No hallucinated sources.
 > 2.  **Anti-Slop**: Enforces active voice and bans filler words ("delve", "rich tapestry").
 > 3.  **Deduplication**: Intelligent merging of multi-source research.
+
+
+
+---
+
+## 🧭 Modes of Operation
+
+The factory is designed to work where you are—cloud, local, or manual.
+
+### 1. ☁️ Cloud Mode (Performance)
+**Best for**: Speed, huge context, and reasoning capability.
+*   **Requirements**: A valid `GOOGLE_API_KEY`.
+*   **Setup**:
+    ```bash
+    export GOOGLE_API_KEY="AIzaSy..."
+    python3 run_factory.py -g "Topic"
+    ```
+*   **Engine**: Routes queries to Google Gemini 2.0/3.0.
+
+### 2. 🏠 Local Mode (Privacy/Offline)
+**Best for**: Air-gapped environments, privacy, and zero cost.
+*   **Requirements**: No API Key needed.
+*   **Setup**:
+    1.  Run the factory *without* a key: `python3 run_factory.py -g "Topic"`
+    2.  Select `[L]` when prompted.
+    3.  The system scans your **RAM** and **Disk Space**.
+*   **Automatic Selection**:
+    *   🚀 **High Spec** (>14GB RAM): Loads `google/gemma-7b-it`
+    *   ⚖️ **Med Spec** (>6GB RAM): Loads `google/gemma-2b-it`
+    *   💡 **Low Spec**: Should use `TinyLlama` (Limited quality)
+
+### 3. 🧘 Vibe Mode (Manual Simulation)
+**Best for**: "Vibe Coding", experimenting in AI Studio, or other IDEs.
+*   **Concept**: This entire repository's logic is compressed into one file: `grand_curation_prompt_v2.md`.
+*   **Instructions**:
+    1.  Open `grand_curation_prompt_v2.md`.
+    2.  Copy the **entire** text.
+    3.  Paste into **Google AI Studio**, **Antigravity IDE**, or **ChatGPT**.
+    4.  You now have a manually operable version of the factory!
+
+---
 
 ---
 
