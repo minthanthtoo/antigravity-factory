@@ -9,8 +9,8 @@
 **Problem**: Scientific knowledge is fragmented across millions of PDFs.  
 **Solution**: The **Antigravity Factory**—an autonomous intelligence rig that turns scattered research papers into high-fidelity, industrial-grade textbooks.
 
-![Raw Papers Configured](../assets/raw_papers_grounded_1766096935014.png)
-![Typeset Book Result](../assets/typeset_book_grounded_1766096950459.png)
+![Raw Papers Configured](assets/raw_papers_grounded_1766096935014.png)
+![Typeset Book Result](assets/typeset_book_grounded_1766096950459.png)
 
 ---
 
