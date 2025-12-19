@@ -1,0 +1,13 @@
+{
+  "MODEL_NAME": "models/gemma-3-27b-it",
+  "SOURCES": "arxiv",
+  "PAPER_LIMIT": 5,
+  "OUTPUT_FORMAT": "pdf",
+  "FETCH_MODE": "fulltext",
+  "START_DATE": "2024-01-01",
+  "SEARCH_QUERY": "The Singularity (Artificial Superintelligence)",
+  "BOOK_NAME": "Volume 4: The Singularity",
+  "MOCK_MODE": false,
+  "GOOGLE_API_KEY": "",
+  "AUTO_CONFIRM": true
+}

@@ -20,6 +20,31 @@ __pycache__/
 
 # Image Assets
 *.png
+!assets/*.png
+
+# Generated Books
+*_full.md
+*_draft.md
+
+# Test Artifacts
+papers_test/
+papers_interactive/
+suite_config_test.py
+debug_import.py
+demo_custom_script.py
+list_models.py
+reasoning_test_full.md
+test_*.md
+valid_models.txt*
+resume_test/
+format_test/
+format_matrix_test/
+final_audit/
+mega_test_output/
+test_dl_corpus/
+integration_test/
+final_feature_test/
+final_sanity_check/
 
 # System
 .DS_Store
